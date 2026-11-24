@@ -1,69 +1,80 @@
-import Image from "next/image";
+import { ExamSelector } from "@/components/ExamSelector";
+import { RuledList } from "@/components/RuledList";
+import { EXAMS } from "@/data/exams";
+import { TOOLS } from "@/data/tools";
+import { buildMetadata } from "@/lib/seo";
 
-export default function Home() {
+export const metadata = buildMetadata({
+  title: "Free exam form photo, signature & PDF tools",
+  description:
+    "Resize photo and signature, compress images, and make PDFs for Indian government exam forms. Your files stay on your device.",
+  path: "/",
+});
+
+// Only list pages that really exist, so nobody clicks into a 404.
+const LIVE_EXAMS = EXAMS.filter((e) => e.live);
+const LIVE_TOOLS = TOOLS.filter((t) => t.live);
+
+export default function HomePage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="wrap pb-8 pt-6 sm:pt-10">
+      <section aria-labelledby="hero-title" className="max-w-2xl">
+        <h1 id="hero-title" className="text-display font-bold">
+          Get your photo, signature and PDF ready for your exam form
+        </h1>
+        <p className="mt-3 text-lg text-muted">
+          Choose your exam to find the right tool. Your files stay on your device. Nothing is uploaded.
+        </p>
+      </section>
+
+      <div className="mt-6 max-w-2xl">
+        <ExamSelector exams={LIVE_EXAMS} />
+        <p className="mt-3 text-sm text-muted">
+          Exam not in the list? Pick a tool directly from{" "}
+          <a href="#tools" className="text-ink underline underline-offset-4">
+            the tools below
+          </a>
+          .
+        </p>
+      </div>
+
+      <section id="exams" aria-labelledby="exams-title" className="mt-14 scroll-mt-4">
+        <h2 id="exams-title" className="text-xl font-bold">
+          Exams
+        </h2>
+        <p className="mb-4 mt-1 max-w-2xl text-muted">We are starting with these exams and will add more.</p>
+        <RuledList
+          items={LIVE_EXAMS.map((e) => ({
+            href: `/exams/${e.slug}/`,
+            title: e.name,
+            sub: e.description,
+          }))}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </section>
+
+      <section id="tools" aria-labelledby="tools-title" className="mt-14 scroll-mt-4">
+        <h2 id="tools-title" className="text-xl font-bold">
+          Tools
+        </h2>
+        <p className="mb-4 mt-1 max-w-2xl text-muted">Each tool works in your browser, on your phone or computer.</p>
+        <RuledList
+          items={LIVE_TOOLS.map((t) => ({
+            href: `/tools/${t.slug}/`,
+            title: t.name,
+            sub: t.blurb,
+          }))}
+        />
+      </section>
+
+      <section aria-labelledby="check-title" className="mt-14 max-w-2xl">
+        <h2 id="check-title" className="text-xl font-bold">
+          Before you submit
+        </h2>
+        <p className="mt-2">
+          Size rules change between exams and between years. Always confirm them in the official notification
+          before you upload.
+        </p>
+      </section>
     </div>
   );
 }
