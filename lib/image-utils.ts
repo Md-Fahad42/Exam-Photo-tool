@@ -393,3 +393,59 @@ export function buildChecks(
   }
   return checks;
 }
+
+/* ---------- Lossy encoding for JPG or WebP to a size limit (Phase 3B) ---------- */
+
+export type LossyType = "image/jpeg" | "image/webp";
+
+async function lossyBlob(canvas: HTMLCanvasElement, type: LossyType, quality: number): Promise<Blob> {
+  const blob = await canvasToBlob(canvas, type, quality);
+  // Browsers that cannot save WebP silently return a PNG instead.
+  if (blob.type !== type) {
+    throw new UserFacingError("This browser cannot save WebP pictures. Please choose JPG instead.");
+  }
+  return blob;
+}
+
+/**
+ * Binary search for the highest quality whose file is <= maxBytes.
+ * Works for JPEG and WebP. tooBig = true means even the lowest quality is over the limit.
+ */
+export async function encodeLossy(
+  canvas: HTMLCanvasElement,
+  type: LossyType,
+  maxBytes: number,
+  onProgress?: (fraction: number) => void
+): Promise<{ blob: Blob; quality: number; tooBig: boolean }> {
+  const top = await lossyBlob(canvas, type, 1);
+  onProgress?.(0.1);
+  if (top.size <= maxBytes) {
+    onProgress?.(1);
+    return { blob: top, quality: 1, tooBig: false };
+  }
+
+  const floor = await lossyBlob(canvas, type, MIN_QUALITY);
+  onProgress?.(0.2);
+  if (floor.size > maxBytes) {
+    return { blob: floor, quality: MIN_QUALITY, tooBig: true };
+  }
+
+  const STEPS = 9;
+  let lo = MIN_QUALITY;
+  let hi = 1;
+  let best = floor;
+  let bestQ = MIN_QUALITY;
+  for (let i = 0; i < STEPS; i++) {
+    const mid = (lo + hi) / 2;
+    const blob = await lossyBlob(canvas, type, mid);
+    if (blob.size <= maxBytes) {
+      best = blob;
+      bestQ = mid;
+      lo = mid;
+    } else {
+      hi = mid;
+    }
+    onProgress?.(0.2 + (0.8 * (i + 1)) / STEPS);
+  }
+  return { blob: best, quality: bestQ, tooBig: false };
+}
