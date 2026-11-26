@@ -255,7 +255,7 @@ export function ImageToPdfTool() {
                     className="h-16 w-16 shrink-0 rounded-control border border-line object-cover"
                   />
                   <div className="min-w-0 flex-1 basis-40">
-                    <p className="break-words font-semibold">
+                    <p className="wrap-break-words font-semibold">
                       Page {index + 1}: {item.name}
                     </p>
                     <p className="text-sm text-muted">

@@ -170,7 +170,7 @@ export function CompressTool() {
           </p>
         ) : null}
         {src ? (
-          <p className="break-words text-sm text-muted">
+          <p className="wrap-break-words text-sm text-muted">
             Using: {src.name} · {formatKB(src.bytes)} · {src.width} × {src.height} px
           </p>
         ) : null}

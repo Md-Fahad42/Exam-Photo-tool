@@ -10,9 +10,20 @@ type Props = {
   disabled?: boolean;
   buttonLabel: string;
   onFiles: (files: File[]) => void;
+  /** Default "image/*". For PDFs use "application/pdf,.pdf". */
+  accept?: string;
+  /** Word used in the drag text. Default "picture". */
+  noun?: "picture" | "PDF";
 };
 
-export function FilePicker({ multiple = false, disabled = false, buttonLabel, onFiles }: Props) {
+export function FilePicker({
+  multiple = false,
+  disabled = false,
+  buttonLabel,
+  onFiles,
+  accept = "image/*",
+  noun = "picture",
+}: Props) {
   const input = useRef<HTMLInputElement>(null);
   const [dragging, setDragging] = useState(false);
 
@@ -44,8 +55,8 @@ export function FilePicker({ multiple = false, disabled = false, buttonLabel, on
         {dragging
           ? "Drop here"
           : multiple
-            ? "Drag pictures here, or choose them."
-            : "Drag a picture here, or choose one."}
+            ? `Drag ${noun}s here, or choose them.`
+            : `Drag a ${noun} here, or choose one.`}
       </p>
       <div className="mt-3 flex min-h-12 items-center justify-center">
         <button
@@ -60,7 +71,7 @@ export function FilePicker({ multiple = false, disabled = false, buttonLabel, on
       <input
         ref={input}
         type="file"
-        accept="image/*"
+        accept={accept}
         multiple={multiple}
         className="hidden"
         onChange={onPick}

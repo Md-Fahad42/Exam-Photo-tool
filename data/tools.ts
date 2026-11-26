@@ -12,6 +12,8 @@ export const TOOLS: readonly Tool[] = [
   { slug: "compress-image", name: "Image compressor", blurb: "Make a picture smaller to fit a KB limit. JPG or WebP output.", live: true },
   { slug: "convert-image", name: "Image format converter", blurb: "Convert a picture between JPG, PNG and WebP.", live: true },
   { slug: "image-to-pdf", name: "Image to PDF", blurb: "Put several pictures into one PDF. Reorder and remove pages.", live: true },
-  { slug: "compress-pdf", name: "PDF compressor", blurb: "Make a PDF smaller to fit an upload limit.", live: false },
-  { slug: "merge-pdf", name: "Merge PDFs", blurb: "Combine several PDFs into one file.", live: false },
+  { slug: "merge-pdf", name: "Merge PDFs", blurb: "Combine several PDFs into one file. Reorder and remove files.", live: true },
+  { slug: "split-pdf", name: "Split PDF", blurb: "Split a PDF by page range, or extract the pages you choose.", live: true },
+  { slug: "pdf-to-jpg", name: "PDF to JPG", blurb: "Turn the pages of a PDF into JPG pictures.", live: true },
+  { slug: "compress-pdf", name: "PDF compressor", blurb: "Make a PDF smaller to fit an upload limit. Light or strong.", live: true },
 ];

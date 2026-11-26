@@ -6,11 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "predev": "node scripts/copy-pdf-worker.mjs",
+    "prebuild": "node scripts/copy-pdf-worker.mjs"
   },
   "dependencies": {
     "next": "16.4.6",
     "pdf-lib": "^1.17.1",
+    "pdfjs-dist": "^6.5.438",
     "react": "19.3.0",
     "react-dom": "19.3.0"
   },
